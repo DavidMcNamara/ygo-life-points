@@ -3,46 +3,46 @@ package com.example.ygolifepoints;
 import android.annotation.SuppressLint;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
+import org.w3c.dom.Text;
+
 public class FullscreenActivity extends AppCompatActivity {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
     private static final boolean AUTO_HIDE = true;
-
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
-    /**
-     * Some older devices needs a small delay between UI widget updates
-     * and a change of the status and navigation bar.
-     */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     private View mContentView;
+
+    // PLAYER ONE
+    private Button playerOneLpIncrease;
+    private Button playerOneLpDecrease;
+    private TextView playerOneLpDisplay;
+
+    // PLAYER TWO
+    private Button playerTwoLpIncrease;
+    private Button playerTwoLpDecrease;
+    private TextView playerTwoLpDisplay;
+
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
         public void run() {
-            // Delayed removal of status and navigation bar
-
-            // Note that some of these constants are new as of API 16 (Jelly Bean)
-            // and API 19 (KitKat). It is safe to use them, as they are inlined
-            // at compile-time and do nothing on earlier devices.
             mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -55,7 +55,6 @@ public class FullscreenActivity extends AppCompatActivity {
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
-            // Delayed display of UI elements
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.show();
@@ -67,14 +66,11 @@ public class FullscreenActivity extends AppCompatActivity {
     private final Runnable mHideRunnable = new Runnable() {
         @Override
         public void run() {
+            // when the app runs hid the UI
             hide();
         }
     };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
+
     private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -97,18 +93,40 @@ public class FullscreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_fullscreen);
-
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mContentView = findViewById(R.id.fullscreen_content);
+        mContentView = findViewById(R.id.playerOneLpDisplay);
+
+        // Player one lp display
+        playerOneLpDisplay = (TextView) findViewById(R.id.playerOneLpDisplay);
+
+        // Player one button logic
+        playerOneLpIncrease = (Button) findViewById(R.id.increaseLp);
+        playerOneLpDecrease = (Button) findViewById(R.id.decreaseLp);
+
+        // Player one increase lp onclick event
+        playerOneLpIncrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createAlert("Increase Life Points", true, 1);
+                System.out.println("Player 1 LP increase clicked");
+            }
+        });
+
+        playerOneLpDecrease.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                createAlert("Decrease Life Points", false, 1);
+                System.out.println("Player 1 LP decrease clicked");
+            }
+        });
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toggle();
+                System.out.println("User Clicked the screen");
             }
         });
 
@@ -128,14 +146,6 @@ public class FullscreenActivity extends AppCompatActivity {
         delayedHide(100);
     }
 
-    private void toggle() {
-        if (mVisible) {
-            hide();
-        } else {
-            show();
-        }
-    }
-
     private void hide() {
         // Hide UI first
         ActionBar actionBar = getSupportActionBar();
@@ -143,7 +153,7 @@ public class FullscreenActivity extends AppCompatActivity {
             actionBar.hide();
         }
         mControlsView.setVisibility(View.GONE);
-        mVisible = false;
+        mVisible = true;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable);
@@ -161,12 +171,60 @@ public class FullscreenActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
     }
 
-    /**
-     * Schedules a call to hide() in delay milliseconds, canceling any
-     * previously scheduled calls.
-     */
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    public void createAlert(String title, final boolean increase, final int player) {
+        // Create Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Enter Value").setTitle(title).setCancelable(true);
+        // Create input that accepts numbers
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(input);
+        // Create apply button
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int inputValue = Integer.parseInt(input.getText().toString());
+                updateLp(player, increase, inputValue);
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    public void updateLp(int player, boolean increase, int amount){
+        int currentLp;
+
+        if(player == 1)
+            currentLp = Integer.parseInt(playerOneLpDisplay.getText().toString());
+        else
+            currentLp = Integer.parseInt(playerTwoLpDisplay.getText().toString());
+
+        if(increase)
+            currentLp += amount;
+        else
+            currentLp -= amount;
+
+        if(player == 1)
+            playerOneLpDisplay.setText(String.valueOf(currentLp));
+        else
+            playerTwoLpDisplay.setText(String.valueOf(currentLp));
+
+        checkLifePoints(player, currentLp);
+    }
+
+    public void checkLifePoints(int player, int currentLp){
+        if(currentLp <= 0){
+            System.out.println("Player " + player + " has lost the game");
+            if(player == 1)
+                playerOneLpDisplay.setText("0");
+            else
+                playerTwoLpDisplay.setText("0");
+            //displayResetOption();
+        }
+
     }
 }

@@ -2,4 +2,8 @@
     <string name="app_name">YgoLifePoints</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="lp_default">8000</string>
+    <string name="increaseLp">+</string>
+    <string name="decreaseLp">-</string>
+    <string name="divideLp">/</string>
 </resources>
