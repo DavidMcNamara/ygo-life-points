@@ -6,4 +6,5 @@
     <string name="increaseLp">+</string>
     <string name="decreaseLp">-</string>
     <string name="divideLp">/</string>
+    <string name="settingsButton">Settings</string>
 </resources>

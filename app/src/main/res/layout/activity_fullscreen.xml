@@ -4,43 +4,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
+    android:focusable="auto"
+    android:focusableInTouchMode="true"
+    android:rotation="0"
+    android:rotationX="0"
+    android:rotationY="0"
+    android:touchscreenBlocksFocus="false"
     tools:context=".FullscreenActivity">
-
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
-    <TextView
-        android:id="@+id/playerOneLpDisplay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center|top"
-        android:keepScreenOn="true"
-        android:text="@string/lp_default"
-        android:textAlignment="center"
-        android:textColor="#E8E8E8"
-        android:textSize="50sp"
-        android:textStyle="bold" />
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
 
-    <Button
-        android:id="@+id/increaseLp"
+    <TextView
+        android:id="@+id/playerOneLpDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:text="@string/increaseLp" />
-    <Button
-        android:id="@+id/decreaseLp"
+        android:clickable="true"
+        android:focusable="auto"
+        android:focusableInTouchMode="true"
+        android:gravity="center|top"
+        android:keepScreenOn="true"
+        android:rotationX="0"
+        android:selectAllOnFocus="false"
+        android:text="@string/lp_default"
+        android:textAlignment="center"
+        android:textColor="#E8E8E8"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/playerTwoLpDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:text="@string/decreaseLp" />
+        android:clickable="true"
+        android:focusable="auto"
+        android:focusableInTouchMode="true"
+        android:gravity="top"
+        android:keepScreenOn="true"
+        android:outlineProvider="background"
+        android:rotation="0"
+        android:selectAllOnFocus="false"
+        android:text="@string/lp_default"
+        android:textAlignment="center"
+        android:textColor="#FD0000"
+        android:textSize="50sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/options_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settingsButton" />
+
+    <Button
+        android:id="@+id/coin_flip_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100px"
+        android:text="Coin FLip" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:paddingTop="1000px">
 
         <LinearLayout
             android:id="@+id/fullscreen_content_controls"
@@ -58,7 +89,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/dummy_button" />
+                android:text="@string/settingsButton" />
 
         </LinearLayout>
 
