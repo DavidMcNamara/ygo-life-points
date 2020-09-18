@@ -25,17 +25,17 @@ import android.widget.TextView;
 
 
 public class coinFlip extends AppCompatActivity {
-
     // TODO create new art for the coins
     // TODO add a back button to the main activity
-
     private Button flipCoin;
     private Button removeCoin;
     private Button addCoin;
+    // TODO remove this, if not needed
     private ImageView image;
     private TextView results;
     private int numberOfCoins = 1; // 1 is the default and minimum number of coins
     public int height;
+    // TODO remove this, if not needed
     public int width;
     public ConstraintLayout cl;
     public LinearLayout ll;
@@ -90,8 +90,7 @@ public class coinFlip extends AppCompatActivity {
             ((LinearLayout) ll).removeAllViews();
         for(int i = 0 ; i < numberOfCoins; i++) {
             ImageView coin = new ImageView(this);
-            // TODO create a default "side" to the coin, one that does not indicate heads or tails
-            coin.setImageResource(R.drawable.coin_head);
+            coin.setImageResource(R.drawable.coin_unknown);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             lp.setMargins(0, height/2, 0,0);
             coin.setLayoutParams(lp);
@@ -114,9 +113,9 @@ public class coinFlip extends AppCompatActivity {
             public void onAnimationEnd(Animation animation) {
                 for(int i = 0 ; i < numberOfCoins; i++) {
                     if (Math.random() > 0.5)
-                        coin.setImageResource(R.drawable.coin_head);
+                        coin.setImageResource(R.drawable.coin_heads);
                     else
-                        coin.setImageResource(R.drawable.coin_tail);
+                        coin.setImageResource(R.drawable.coin_tails);
                 }
                 Animation fadeIn = new AlphaAnimation(0, 1);
                 fadeIn.setInterpolator(new DecelerateInterpolator());

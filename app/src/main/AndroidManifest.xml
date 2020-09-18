@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".coinFlip"></activity>
+        <activity android:name=".rollDice"></activity>
+        <activity android:name=".coinFlip" />
         <activity android:name=".Settings" />
         <activity
             android:name=".FullscreenActivity"

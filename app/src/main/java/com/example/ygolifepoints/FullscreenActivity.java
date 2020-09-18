@@ -33,14 +33,14 @@ public class FullscreenActivity extends AppCompatActivity {
     private final Handler mHideHandler = new Handler();
     private View mContentView;
 
-    // PLAYER ONE
+    // PLAYERS
     private TextView playerOneLpDisplay;
-    // PLAYER TWO
     private TextView playerTwoLpDisplay;
-    // OPTIONS BUTTON
+
+    // BUTTONS
     private Button optionsButton;
-    // COIN FLIP BUTTON
     private Button coinFlipButton;
+    private Button rollDiceButton;
 
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -107,6 +107,8 @@ public class FullscreenActivity extends AppCompatActivity {
         optionsButtonSetup();
         // set up the coin flip button
         coinFlipSetup();
+        // set up the dice roll button
+        rollDiceSetup();
         ////////////////////////////////
         // get the device orientation
         // TODO change the layout depending on the device orientation
@@ -272,14 +274,16 @@ public class FullscreenActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // change to coin flip activity
     private void flipCoin(){
-        // TODO add an animation to this
-        // To just implement the functionality of this feature create a dialog
         Intent intent = new Intent(this, coinFlip.class);
         startActivity(intent);
     }
-    private void rollDice(){
 
+    // change to roll dice activity
+    private void rollDice(){
+        Intent intent = new Intent(this, rollDice.class);
+        startActivity(intent);
     }
     private void viewLog(){
 
@@ -310,6 +314,16 @@ public class FullscreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 flipCoin();
+            }
+        });
+    }
+
+    private void rollDiceSetup(){
+        rollDiceButton = (Button) findViewById(R.id.dice_roll_button);
+        rollDiceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rollDice();
             }
         });
     }
