@@ -25,7 +25,6 @@ import android.widget.TextView;
 
 
 public class coinFlip extends AppCompatActivity {
-    // TODO create new art for the coins
     // TODO add a back button to the main activity
     private Button flipCoin;
     private Button removeCoin;
@@ -45,7 +44,6 @@ public class coinFlip extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coin_flip);
 
-        //height = findScreenInfo();
         height = getHeight();
 
         cl = (ConstraintLayout) findViewById(R.id.cl);
@@ -129,7 +127,6 @@ public class coinFlip extends AppCompatActivity {
 
             }
         });
-
         coin.startAnimation(fadeOut);
     }
 

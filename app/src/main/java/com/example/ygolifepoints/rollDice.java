@@ -35,37 +35,9 @@ public class rollDice extends AppCompatActivity {
 
         numberOfDice = 1;
 
-        addDice = (Button) findViewById(R.id.add_dice);
-        addDice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(numberOfDice < 3){
-                    numberOfDice++;
-                    // TODO add animation to show the dice as they are being added and removed
-                    results.setText("Number of dice: "+ numberOfDice);
-                }
-            }
-        });
-
-        removeDice = (Button) findViewById(R.id.remove_dice);
-        removeDice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(numberOfDice > 1){
-                    numberOfDice--;
-                    // TODO add animation to show the dice as they are being added and removed
-                    results.setText("Number of dice: "+ numberOfDice);
-                }
-            }
-        });
-
-        rollDice = (Button) findViewById(R.id.roll_dice);
-        rollDice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rollTheDice();
-            }
-        });
+        addDiceSetup();
+        removeDiceSetup();
+        rollDiceSetup();
     }
 
     private void rollTheDice(){
@@ -96,24 +68,18 @@ public class rollDice extends AppCompatActivity {
                 for(int i = 0 ; i < numberOfDice; i++) {
                     double result = Math.random();
                     System.out.println("This dice roll -> " + result);
-                    if(result <= 1.0/6.0){
+                    if(result <= 1.0/6.0)
                         dice.setImageResource(R.drawable.dice_face_1);
-                    }
-                    else if(1.0/6.0 < result  && result <= (1.0/6.0) * 2){
+                    else if(1.0/6.0 < result  && result <= (1.0/6.0) * 2)
                         dice.setImageResource(R.drawable.dice_face_2);
-                    }
-                    else if((1.0/6.0) * 2 < result  && result <= (1.0/6.0) * 3){
+                    else if((1.0/6.0) * 2 < result  && result <= (1.0/6.0) * 3)
                         dice.setImageResource(R.drawable.dice_face_3);
-                    }
-                    else if((1.0/6.0) * 3 < result  && result <= (1.0/6.0) * 4){
+                    else if((1.0/6.0) * 3 < result  && result <= (1.0/6.0) * 4)
                         dice.setImageResource(R.drawable.dice_face_4);
-                    }
-                    else if((1.0/6.0) * 4 < result  && result <= (1.0/6.0) * 5){
+                    else if((1.0/6.0) * 4 < result  && result <= (1.0/6.0) * 5)
                         dice.setImageResource(R.drawable.dice_face_5);
-                    }
-                    else if((1.0/6.0) * 5 < result  && result <= (1.0/6.0) * 6){
+                    else if((1.0/6.0) * 5 < result  && result <= (1.0/6.0) * 6)
                         dice.setImageResource(R.drawable.dice_face_6);
-                    }
                 }
                 Animation fadeIn = new AlphaAnimation(0, 1);
                 fadeIn.setInterpolator(new DecelerateInterpolator());
@@ -127,5 +93,43 @@ public class rollDice extends AppCompatActivity {
             }
         });
         dice.startAnimation(fadeOut);
+    }
+
+    private void addDiceSetup(){
+        addDice = (Button) findViewById(R.id.add_dice);
+        addDice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(numberOfDice < 3){
+                    numberOfDice++;
+                    // TODO add animation to show the dice as they are being added and removed
+                    results.setText("Number of dice: "+ numberOfDice);
+                }
+            }
+        });
+    }
+
+    private void removeDiceSetup(){
+        removeDice = (Button) findViewById(R.id.remove_dice);
+        removeDice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(numberOfDice > 1){
+                    numberOfDice--;
+                    // TODO add animation to show the dice as they are being added and removed
+                    results.setText("Number of dice: "+ numberOfDice);
+                }
+            }
+        });
+    }
+
+    private void rollDiceSetup(){
+        rollDice = (Button) findViewById(R.id.roll_dice);
+        rollDice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rollTheDice();
+            }
+        });
     }
 }

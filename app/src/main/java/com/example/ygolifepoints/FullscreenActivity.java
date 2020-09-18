@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -42,6 +43,9 @@ public class FullscreenActivity extends AppCompatActivity {
     private Button coinFlipButton;
     private Button rollDiceButton;
 
+    // CONTAINERS
+    private LinearLayout lifePointContainer;
+
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -55,6 +59,7 @@ public class FullscreenActivity extends AppCompatActivity {
         }
     };
     private View mControlsView;
+
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -63,8 +68,6 @@ public class FullscreenActivity extends AppCompatActivity {
                 actionBar.show();
             }
             mControlsView.setVisibility(View.VISIBLE);
-
-
         }
     };
     private boolean mVisible;
@@ -76,25 +79,6 @@ public class FullscreenActivity extends AppCompatActivity {
         }
     };
 
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            switch (motionEvent.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    if (AUTO_HIDE) {
-                        delayedHide(AUTO_HIDE_DELAY_MILLIS);
-                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                    view.performClick();
-                    break;
-                default:
-                    break;
-            }
-            return false;
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,73 +87,44 @@ public class FullscreenActivity extends AppCompatActivity {
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.playerOneLpDisplay);
 
+        // get the screen info and set the position of the life points
+        getScreenInfo();
         // set up the settings button
         optionsButtonSetup();
         // set up the coin flip button
         coinFlipSetup();
         // set up the dice roll button
         rollDiceSetup();
-        ////////////////////////////////
-        // get the device orientation
-        // TODO change the layout depending on the device orientation
-        String orientation = getScreenOrientation();
 
-        boolean sideBySide = true; // temp
-
-        // screen info
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int height = displayMetrics.heightPixels;
-        int width = displayMetrics.widthPixels;
-        // TODO align the life point displays in the correct location when everything is working correctly
         // Player one lp display
-        playerOneLpDisplay = (TextView) findViewById(R.id.playerOneLpDisplay);
-        if(!sideBySide)
-            playerOneLpDisplay.setPadding(0, height - (height/4), 0, 0);
-        else
-            playerOneLpDisplay.setPadding(width/4, height/2, 0, 0);
+        playerOneLpDisplay = findViewById(R.id.playerOneLpDisplay);
         playerOneLpDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("clicked the lp");
                 createAlert("Update Player 1 Life Points", 1);
             }
         });
+
         // Player two lp display
-        playerTwoLpDisplay = (TextView) findViewById(R.id.playerTwoLpDisplay);
-        if(!sideBySide)
-            playerTwoLpDisplay.setPadding(0, 0, 0, height/4);
-        else
-            playerTwoLpDisplay.setPadding(width - (width/4), height/3, 0, 0);
+        playerTwoLpDisplay = findViewById(R.id.playerTwoLpDisplay);
         playerTwoLpDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("clicked the lp");
                 createAlert("Update Player 2 Life Points", 2);
             }
         });
+    }
 
-        // Set up the user interaction to manually show or hide the system UI.
-//        mContentView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                System.out.println("User Clicked the screen");
-//            }
-//        });
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+    // recalculate and reposition the life point location
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        getScreenInfo();
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
         delayedHide(100);
     }
 
@@ -233,6 +188,7 @@ public class FullscreenActivity extends AppCompatActivity {
 
         dialog.show();
     }
+
     private void updateLp(int player, boolean increase, int amount){
         int currentLp;
 
@@ -269,6 +225,7 @@ public class FullscreenActivity extends AppCompatActivity {
         Intent intent = new Intent(this, Settings.class);
         startActivity(intent);
     }
+
     private void displaySettings(){
         Intent intent = new Intent(this, Settings.class);
         startActivity(intent);
@@ -285,21 +242,16 @@ public class FullscreenActivity extends AppCompatActivity {
         Intent intent = new Intent(this, rollDice.class);
         startActivity(intent);
     }
+
+    // change to log activity
     private void viewLog(){
-
-    }
-
-    private String getScreenOrientation(){
-        int orientation = getWindowManager().getDefaultDisplay().getRotation();
-        if (orientation%4==0 || orientation%4==2)
-            return "Portrait";
-        else if (orientation%4==1 || orientation%4==3)
-            return "Landscape";
-        return "Something when wrong";
+        // a record of all life point changes
+//        Intent intent = new Intent(this, viewLog.class);
+//        startActivity(intent);
     }
 
     private void optionsButtonSetup(){
-        optionsButton = (Button) findViewById(R.id.options_button);
+        optionsButton = findViewById(R.id.options_button);
         optionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -309,7 +261,7 @@ public class FullscreenActivity extends AppCompatActivity {
     }
 
     private void coinFlipSetup(){
-        coinFlipButton = (Button) findViewById(R.id.coin_flip_button);
+        coinFlipButton = findViewById(R.id.coin_flip_button);
         coinFlipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -319,12 +271,22 @@ public class FullscreenActivity extends AppCompatActivity {
     }
 
     private void rollDiceSetup(){
-        rollDiceButton = (Button) findViewById(R.id.dice_roll_button);
+        rollDiceButton = findViewById(R.id.dice_roll_button);
         rollDiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 rollDice();
             }
         });
+    }
+
+    public void getScreenInfo(){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
+
+        lifePointContainer = findViewById(R.id.life_point_container);
+        lifePointContainer.setPadding(width/2, height/2, 0, 0);
     }
 }
