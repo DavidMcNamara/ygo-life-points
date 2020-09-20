@@ -7,4 +7,10 @@
     <string name="decreaseLp">-</string>
     <string name="divideLp">/</string>
     <string name="settingsButton">Settings</string>
+    <string name="roll_dice">Roll Dice</string>
+    <string name="coin_flip">Coin Flip</string>
+    <string name="remove_dice">Remove Dice</string>
+    <string name="add_dice">Add Dice</string>
+    <string name="textview">TextView</string>
+    <string name="log">Log</string>
 </resources>

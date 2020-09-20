@@ -27,6 +27,8 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+
 public class FullscreenActivity extends AppCompatActivity {
     private static final boolean AUTO_HIDE = true;
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
@@ -42,9 +44,15 @@ public class FullscreenActivity extends AppCompatActivity {
     private Button optionsButton;
     private Button coinFlipButton;
     private Button rollDiceButton;
+    private Button displayLogButton;
+
+    // ACTIVITY LOG
+    //private String history;
+    private TextView historyDisplay;
 
     // CONTAINERS
     private LinearLayout lifePointContainer;
+    public ArrayList<String> duelLog = new ArrayList<String>();
 
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -87,6 +95,8 @@ public class FullscreenActivity extends AppCompatActivity {
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.playerOneLpDisplay);
 
+
+
         // get the screen info and set the position of the life points
         getScreenInfo();
         // set up the settings button
@@ -95,6 +105,8 @@ public class FullscreenActivity extends AppCompatActivity {
         coinFlipSetup();
         // set up the dice roll button
         rollDiceSetup();
+        // set up the display log button
+        displayLogSetup();
 
         // Player one lp display
         playerOneLpDisplay = findViewById(R.id.playerOneLpDisplay);
@@ -192,31 +204,46 @@ public class FullscreenActivity extends AppCompatActivity {
     private void updateLp(int player, boolean increase, int amount){
         int currentLp;
 
-        if(player == 1)
-            currentLp = Integer.parseInt(playerOneLpDisplay.getText().toString());
-        else
-            currentLp = Integer.parseInt(playerTwoLpDisplay.getText().toString());
+        String history = "";
 
-        if(increase)
+        if(player == 1) {
+            currentLp = Integer.parseInt(playerOneLpDisplay.getText().toString());
+            history += "Player 1 ";
+        }
+        else {
+            currentLp = Integer.parseInt(playerTwoLpDisplay.getText().toString());
+            history += "Player 2 ";
+        }
+        if(increase) {
             currentLp += amount;
-        else
+            history += "gained " + amount + " life points.\n";
+        }
+        else {
             currentLp -= amount;
+            history += "lost " + amount + " life points.\n";
+        }
 
         if(player == 1)
             playerOneLpDisplay.setText(String.valueOf(currentLp));
         else
             playerTwoLpDisplay.setText(String.valueOf(currentLp));
 
+        duelLog.add(history);
         checkLifePoints(player, currentLp);
     }
 
     private void checkLifePoints(int player, int currentLp){
+        String history = "";
         if(currentLp <= 0){
+            history = ("Player " + player + " lost the game.\n");
+            duelLog.add(history);
             System.out.println("Player " + player + " has lost the game");
-            if(player == 1)
+            if(player == 1) {
                 playerOneLpDisplay.setText("0");
-            else
+            }
+            else {
                 playerTwoLpDisplay.setText("0");
+            }
             displayResetOption();
         }
     }
@@ -228,6 +255,15 @@ public class FullscreenActivity extends AppCompatActivity {
 
     private void displaySettings(){
         Intent intent = new Intent(this, Settings.class);
+        startActivity(intent);
+    }
+
+    private void displayLog(){
+        Intent intent = new Intent(this, displayLog.class);
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("bundle", duelLog);
+        intent.putExtra("bundle", duelLog);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 
@@ -280,6 +316,16 @@ public class FullscreenActivity extends AppCompatActivity {
         });
     }
 
+    private void displayLogSetup(){
+        displayLogButton = findViewById(R.id.display_log_button);
+        displayLogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayLog();
+            }
+        });
+    }
+
     public void getScreenInfo(){
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -287,6 +333,6 @@ public class FullscreenActivity extends AppCompatActivity {
         int width = displayMetrics.widthPixels;
 
         lifePointContainer = findViewById(R.id.life_point_container);
-        lifePointContainer.setPadding(width/2, height/2, 0, 0);
+        lifePointContainer.setPadding(width/3, height/3, 0, 0);
     }
 }
