@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -41,14 +42,10 @@ public class FullscreenActivity extends AppCompatActivity {
     private TextView playerTwoLpDisplay;
 
     // BUTTONS
-    private Button optionsButton;
-    private Button coinFlipButton;
-    private Button rollDiceButton;
-    private Button displayLogButton;
-
-    // ACTIVITY LOG
-    //private String history;
-    private TextView historyDisplay;
+    private ImageView optionsButton;
+    private ImageView coinFlipButton;
+    private ImageView rollDiceButton;
+    private ImageView displayLogButton;
 
     // CONTAINERS
     private LinearLayout lifePointContainer;
@@ -94,8 +91,6 @@ public class FullscreenActivity extends AppCompatActivity {
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.playerOneLpDisplay);
-
-
 
         // get the screen info and set the position of the life points
         getScreenInfo();
@@ -203,7 +198,6 @@ public class FullscreenActivity extends AppCompatActivity {
 
     private void updateLp(int player, boolean increase, int amount){
         int currentLp;
-
         String history = "";
 
         if(player == 1) {
@@ -249,15 +243,15 @@ public class FullscreenActivity extends AppCompatActivity {
     }
 
     private void displayResetOption(){
-        Intent intent = new Intent(this, Settings.class);
-        startActivity(intent);
+        startActivity(new Intent(this, Settings.class));
     }
 
+    // change to settings activity
     private void displaySettings(){
-        Intent intent = new Intent(this, Settings.class);
-        startActivity(intent);
+        startActivity(new Intent(this, Settings.class));
     }
 
+    // change to display log activity
     private void displayLog(){
         Intent intent = new Intent(this, displayLog.class);
         Bundle bundle = new Bundle();
@@ -269,21 +263,12 @@ public class FullscreenActivity extends AppCompatActivity {
 
     // change to coin flip activity
     private void flipCoin(){
-        Intent intent = new Intent(this, coinFlip.class);
-        startActivity(intent);
+        startActivity(new Intent(this, coinFlip.class));
     }
 
     // change to roll dice activity
     private void rollDice(){
-        Intent intent = new Intent(this, rollDice.class);
-        startActivity(intent);
-    }
-
-    // change to log activity
-    private void viewLog(){
-        // a record of all life point changes
-//        Intent intent = new Intent(this, viewLog.class);
-//        startActivity(intent);
+        startActivity(new Intent(this, rollDice.class));
     }
 
     private void optionsButtonSetup(){
@@ -333,6 +318,7 @@ public class FullscreenActivity extends AppCompatActivity {
         int width = displayMetrics.widthPixels;
 
         lifePointContainer = findViewById(R.id.life_point_container);
-        lifePointContainer.setPadding(width/3, height/3, 0, 0);
+        lifePointContainer.setPadding(0, 0, 0, 0);
     }
+
 }

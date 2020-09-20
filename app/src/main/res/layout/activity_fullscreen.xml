@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -27,11 +28,12 @@
         <TextView
             android:id="@+id/playerOneLpDisplay"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
             android:clickable="true"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:gravity="center|top"
+            android:gravity="center|center_horizontal"
             android:keepScreenOn="true"
             android:rotationX="0"
             android:selectAllOnFocus="false"
@@ -44,48 +46,53 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
             android:orientation="vertical">
 
-            <Button
+            <ImageView
                 android:id="@+id/coin_flip_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/coin_flip" />
+                android:layout_weight="1"
+                android:contentDescription="@string/button_to_flip_coins"
+                app:srcCompat="@drawable/flip_coin_button" />
 
-            <Button
+            <ImageView
                 android:id="@+id/dice_roll_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/roll_dice" />
+                android:layout_weight="1"
+                android:contentDescription="@string/button_to_roll_dice"
+                app:srcCompat="@drawable/roll_dice_button" />
 
-            <Button
+            <ImageView
                 android:id="@+id/options_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/settingsButton" />
+                android:layout_weight="1"
+                android:contentDescription="@string/button_to_go_to_settings"
+                app:srcCompat="@drawable/settings_button" />
 
-            <Button
+            <ImageView
                 android:id="@+id/display_log_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/log" />
+                android:layout_weight="1"
+                android:contentDescription="@string/button_to_view_log"
+                app:srcCompat="@drawable/log_button" />
 
-            <TextView
-                android:id="@+id/history"
-                android:layout_width="match_parent"
-                android:layout_height="496dp"
-                android:text="TextView"
-                android:textColor="#03EAFF" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/playerTwoLpDisplay"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
             android:clickable="true"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:gravity="top"
+            android:gravity="center|center_horizontal"
             android:keepScreenOn="true"
             android:outlineProvider="background"
             android:rotation="0"

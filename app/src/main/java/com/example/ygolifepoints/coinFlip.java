@@ -1,9 +1,12 @@
 package com.example.ygolifepoints;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import android.app.PendingIntent;
+import android.app.StatusBarManager;
 import android.graphics.Matrix;
 import android.graphics.drawable.Animatable;
 import android.media.Image;
@@ -22,20 +25,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
-
 public class coinFlip extends AppCompatActivity {
-    // TODO add a back button to the main activity
-    private Button flipCoin;
-    private Button removeCoin;
-    private Button addCoin;
-    // TODO remove this, if not needed
-    private ImageView image;
+    private ImageView flipCoin;
+    private ImageView removeCoin;
+    private ImageView addCoin;
     private TextView results;
-    private int numberOfCoins = 1; // 1 is the default and minimum number of coins
+    private int numberOfCoins = 1;
     public int height;
-    // TODO remove this, if not needed
-    public int width;
     public ConstraintLayout cl;
     public LinearLayout ll;
 
@@ -44,15 +40,17 @@ public class coinFlip extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coin_flip);
 
+        hideUI();
+
         height = getHeight();
 
         cl = (ConstraintLayout) findViewById(R.id.cl);
-        ll = (LinearLayout) findViewById(R.id.linear_layout);
+        ll = (LinearLayout) findViewById(R.id.coin_container);
 
         results = (TextView) findViewById(R.id.results_text);
         results.setText("Number of coins: 1");
 
-        flipCoin = (Button) findViewById(R.id.flip_coin_button);
+        flipCoin = findViewById(R.id.flip_coin_button);
         flipCoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,7 +58,7 @@ public class coinFlip extends AppCompatActivity {
             }
         });
 
-        addCoin = (Button) findViewById(R.id.add_coin_button);
+        addCoin = findViewById(R.id.add_coin_button);
         addCoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +69,7 @@ public class coinFlip extends AppCompatActivity {
             }
         });
 
-        removeCoin = (Button) findViewById(R.id.remove_coin_button);
+        removeCoin = findViewById(R.id.remove_coin_button);
         removeCoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +88,7 @@ public class coinFlip extends AppCompatActivity {
             ImageView coin = new ImageView(this);
             coin.setImageResource(R.drawable.coin_unknown);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(0, height/2, 0,0);
+            lp.setMargins(0, 0, 0,0);
             coin.setLayoutParams(lp);
             ll.addView(coin);
             flipAnimation(coin);
@@ -142,5 +140,13 @@ public class coinFlip extends AppCompatActivity {
         int height = displayMetrics.heightPixels;
         int width = displayMetrics.widthPixels;
         return height;
+    }
+    private void hideUI(){
+//        final View decorView = getWindow().getDecorView();
+//        final int uiOptions = View.SYSTEM_UI_FLAG_LOW_PROFILE
+//                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+//        decorView.setSystemUiVisibility(uiOptions);
+        ActionBar ab = getSupportActionBar();
+        ab.hide();
     }
 }

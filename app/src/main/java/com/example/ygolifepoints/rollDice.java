@@ -1,7 +1,9 @@
 package com.example.ygolifepoints;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
@@ -15,10 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class rollDice extends AppCompatActivity {
-
-    private Button removeDice;
-    private Button addDice;
-    private Button rollDice;
+    private ImageView removeDice;
+    private ImageView addDice;
+    private ImageView rollDice;
     private TextView results;
     private int numberOfDice;
     private LinearLayout ll;
@@ -27,6 +28,8 @@ public class rollDice extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_roll_dice);
+
+        hideUI();
 
         ll = (LinearLayout) findViewById(R.id.dice_roll);
 
@@ -47,7 +50,7 @@ public class rollDice extends AppCompatActivity {
             ImageView dice = new ImageView(this);
             dice.setImageResource(R.drawable.dice_face_unknown);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(0, 100, 0,0);
+            lp.setMargins(0, 0, 0,0);
             dice.setLayoutParams(lp);
             ll.addView(dice);
             rollAnimation(dice);
@@ -67,7 +70,6 @@ public class rollDice extends AppCompatActivity {
             public void onAnimationEnd(Animation animation) {
                 for(int i = 0 ; i < numberOfDice; i++) {
                     double result = Math.random();
-                    System.out.println("This dice roll -> " + result);
                     if(result <= 1.0/6.0)
                         dice.setImageResource(R.drawable.dice_face_1);
                     else if(1.0/6.0 < result  && result <= (1.0/6.0) * 2)
@@ -96,13 +98,12 @@ public class rollDice extends AppCompatActivity {
     }
 
     private void addDiceSetup(){
-        addDice = (Button) findViewById(R.id.add_dice);
+        addDice = findViewById(R.id.add_dice);
         addDice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(numberOfDice < 3){
                     numberOfDice++;
-                    // TODO add animation to show the dice as they are being added and removed
                     results.setText("Number of dice: "+ numberOfDice);
                 }
             }
@@ -110,13 +111,12 @@ public class rollDice extends AppCompatActivity {
     }
 
     private void removeDiceSetup(){
-        removeDice = (Button) findViewById(R.id.remove_dice);
+        removeDice = findViewById(R.id.remove_dice);
         removeDice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(numberOfDice > 1){
                     numberOfDice--;
-                    // TODO add animation to show the dice as they are being added and removed
                     results.setText("Number of dice: "+ numberOfDice);
                 }
             }
@@ -124,12 +124,17 @@ public class rollDice extends AppCompatActivity {
     }
 
     private void rollDiceSetup(){
-        rollDice = (Button) findViewById(R.id.roll_dice);
+        rollDice = findViewById(R.id.roll_dice);
         rollDice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 rollTheDice();
             }
         });
+    }
+
+    private void hideUI(){
+        ActionBar ab = getSupportActionBar();
+        ab.hide();
     }
 }
