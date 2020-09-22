@@ -31,7 +31,7 @@ public class Settings extends AppCompatActivity {
     }
 
     private void previousActivity(){
-        startActivity(new Intent(this, FullscreenActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     private void hideUI(){
