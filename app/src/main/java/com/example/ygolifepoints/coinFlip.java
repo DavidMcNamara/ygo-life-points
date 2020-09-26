@@ -9,7 +9,11 @@ import android.app.PendingIntent;
 import android.app.StatusBarManager;
 import android.graphics.Matrix;
 import android.graphics.drawable.Animatable;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.Image;
+import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -35,10 +39,29 @@ public class coinFlip extends AppCompatActivity {
     public ConstraintLayout cl;
     public LinearLayout ll;
 
+    private SoundPool soundPool;
+    private int coinFlipSound;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coin_flip);
+        // set up sound pool depending on android version
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            soundPool = new SoundPool.Builder()
+                    .setMaxStreams(1)
+                    .setAudioAttributes(audioAttributes)
+                    .build();
+        }
+        else
+            soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+
+        coinFlipSound = soundPool.load(this, R.raw.coin_flip_sound, 1);
 
         hideUI();
 
@@ -62,6 +85,7 @@ public class coinFlip extends AppCompatActivity {
         addCoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MainActivity.playSound();
                 if(numberOfCoins < 3){
                     numberOfCoins++;
                     results.setText("Number of coins: "+ numberOfCoins);
@@ -73,6 +97,7 @@ public class coinFlip extends AppCompatActivity {
         removeCoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MainActivity.playSound();
                 if(numberOfCoins > 1){
                     numberOfCoins--;
                     results.setText("Number of coins: "+ numberOfCoins);
@@ -82,6 +107,7 @@ public class coinFlip extends AppCompatActivity {
     }
 
     private void flipTheCoins(){
+        soundPool.play(coinFlipSound, 1, 1, 0 , 0, 1);
         if(((LinearLayout) ll).getChildCount() > 0)
             ((LinearLayout) ll).removeAllViews();
         for(int i = 0 ; i < numberOfCoins; i++) {
@@ -148,5 +174,12 @@ public class coinFlip extends AppCompatActivity {
 //        decorView.setSystemUiVisibility(uiOptions);
         ActionBar ab = getSupportActionBar();
         ab.hide();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        soundPool.release();
+        soundPool = null;
     }
 }

@@ -7,6 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.DisplayMetrics;
@@ -31,10 +35,32 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout lifePointContainer;
     public ArrayList<String> duelLog = new ArrayList<String>();
 
+    public static SoundPool soundPool;
+    public static int buttonClickedSound;
+    private int lifePointSound;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // set up sound pool depending on android version
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            soundPool = new SoundPool.Builder()
+                    .setMaxStreams(1)
+                    .setAudioAttributes(audioAttributes)
+                    .build();
+        }
+        else
+            soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+
+        buttonClickedSound = soundPool.load(this, R.raw.button_click_sound, 1);
+        lifePointSound = soundPool.load(this, R.raw.life_points_sound, 1);
 
         lifePointContainer = findViewById(R.id.life_point_container);
         lifePointContainer.setPadding(0, 0, 0, 0);
@@ -86,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Increase Life Points", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                soundPool.play(lifePointSound, 1, 1, 0 , 0, 1);
                 int inputValue = Integer.parseInt(input.getText().toString());
                 updateLp(player, true, inputValue);
             }
@@ -93,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setNegativeButton("Decrease Life Points", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                soundPool.play(lifePointSound, 1, 1, 0 , 0, 1);
                 int inputValue = Integer.parseInt(input.getText().toString());
                 updateLp(player, false, inputValue);
             }
@@ -154,11 +182,13 @@ public class MainActivity extends AppCompatActivity {
 
     // change to settings activity
     private void displaySettings(){
+        playSound();
         startActivity(new Intent(this, Settings.class));
     }
 
     // change to display log activity
     private void displayLog(){
+        playSound();
         Intent intent = new Intent(this, displayLog.class);
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("bundle", duelLog);
@@ -169,11 +199,13 @@ public class MainActivity extends AppCompatActivity {
 
     // change to coin flip activity
     private void flipCoin(){
+        playSound();
         startActivity(new Intent(this, coinFlip.class));
     }
 
     // change to roll dice activity
     private void rollDice(){
+        playSound();
         startActivity(new Intent(this, rollDice.class));
     }
 
@@ -227,5 +259,9 @@ public class MainActivity extends AppCompatActivity {
     private void hideUI(){
         ActionBar ab = getSupportActionBar();
         ab.hide();
+    }
+
+    public static void playSound(){
+        soundPool.play(buttonClickedSound, 1, 1, 0 , 0, 1);
     }
 }
